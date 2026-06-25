@@ -1,6 +1,6 @@
 const CLIENT_ID = '8b5e1e9489994a8fa432b7a3026d0481';
 const REDIRECT_URI = 'https://connorjamesbarry1-blip.github.io/spotify-visualizer';
-const SCOPES = 'user-read-currently-playing user-read-playback-state';
+const SCOPES = 'user-read-currently-playing user-read-playback-state streaming user-modify-playback-state';
 const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize';
 const TOKEN_ENDPOINT = 'https://accounts.spotify.com/api/token';
 
