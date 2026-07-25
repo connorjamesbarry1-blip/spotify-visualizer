@@ -30,6 +30,7 @@
   <!-- ── Visualizer screen ─────────────────────────────────────────────────── -->
   <div id="visualizer-screen" class="screen">
     <canvas id="visualizer-canvas"></canvas>
+    <div id="p5-container"></div>
     <canvas id="cat-canvas"></canvas>
 
     <!-- ── Settings gear + control panel ─────────────────────────────────── -->
@@ -64,6 +65,11 @@
           <button class="mode-btn" data-mode="spiral">Spiral</button>
           <button class="mode-btn" data-mode="polygon">Polygon</button>
           <button class="mode-btn" data-mode="tunnel">Tunnel</button>
+          <button class="mode-btn" data-mode="p5-noise">Noise Field</button>
+          <button class="mode-btn" data-mode="p5-sphere">3D Sphere</button>
+          <button class="mode-btn" data-mode="p5-grid">Grid Ripple</button>
+          <button class="mode-btn" data-mode="p5-phase">Phase Space</button>
+          <button class="mode-btn" data-mode="p5-kaleid">Kaleidoscope</button>
         </div>
       </div>
 
@@ -382,6 +388,7 @@
     });
   </script>
 
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.11.3/lib/p5.min.js"></script>
   <script type="module" src="src/app.js"></script>
 </body>
 </html>

@@ -363,6 +363,21 @@ input[type="range"]::-moz-range-track {
 
 .not-playing.hidden { opacity: 0; }
 
+/* ── p5.js container ──────────────────────────────────────────────────────── */
+
+#p5-container {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+#p5-container canvas {
+  display: block;
+}
+
 /* ── Cat canvas ───────────────────────────────────────────────────────────── */
 
 #cat-canvas {

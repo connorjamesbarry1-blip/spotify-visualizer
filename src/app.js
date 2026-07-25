@@ -6,11 +6,17 @@
 import { AudioEngine } from './audio.js';
 import { Visualizer } from './visualizer.js';
 import { CatMode } from './catmode.js';
+import { P5Visualizer } from './p5visualizer.js';
 
-let audioEngine = new AudioEngine();
-let visualizer  = null;
-let catMode     = null;
-let rafId       = null;
+let audioEngine  = new AudioEngine();
+let visualizer   = null;
+let catMode      = null;
+let p5viz        = null;
+let rafId        = null;
+
+let vizCanvas    = null;
+let p5Container  = null;
+let _prevVizMode = null;
 
 // ── Screen transitions ────────────────────────────────────────────────────────
 
@@ -73,6 +79,28 @@ function startRaf() {
     const time     = audioEngine.getTimeDomainData();
     const beatInfo = audioEngine.getBeatInfo();
 
+    // Share current audio data with p5 sketches
+    window.P5_AUDIO = { freqData: freq, timeData: time, beatInfo, ts };
+
+    // Handle transitions between native and p5 modes
+    const curMode = window.VIZ_SETTINGS?.mode ?? 'spectrum';
+    if (curMode !== _prevVizMode) {
+      const wasP5 = _prevVizMode?.startsWith('p5-') ?? false;
+      const isP5  = curMode.startsWith('p5-');
+      if (isP5 && !wasP5) {
+        vizCanvas.style.opacity   = '0';
+        p5Container.style.opacity = '1';
+        p5viz.start(curMode);
+      } else if (!isP5 && wasP5) {
+        p5viz.stop();
+        p5Container.style.opacity = '0';
+        vizCanvas.style.opacity   = '1';
+      } else if (isP5) {
+        p5viz.start(curMode); // switch between p5 modes
+      }
+      _prevVizMode = curMode;
+    }
+
     visualizer.draw(freq, time, ts, beatInfo);
     catMode.tick(ts, beatInfo);
 
@@ -88,6 +116,10 @@ function startRaf() {
 
 function stopRaf() {
   if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+  p5viz?.stop();
+  if (p5Container) p5Container.style.opacity = '0';
+  if (vizCanvas)   vizCanvas.style.opacity   = '1';
+  _prevVizMode = null;
 }
 
 // ── Tab audio capture ─────────────────────────────────────────────────────────
@@ -138,11 +170,13 @@ async function startCapture() {
 // ── Entry point ───────────────────────────────────────────────────────────────
 
 async function init() {
-  const vizCanvas = document.getElementById('visualizer-canvas');
+  vizCanvas   = document.getElementById('visualizer-canvas');
+  p5Container = document.getElementById('p5-container');
   const catCanvas = document.getElementById('cat-canvas');
 
   visualizer = new Visualizer(vizCanvas);
   catMode    = new CatMode(catCanvas);
+  p5viz      = new P5Visualizer(p5Container);
 
   document.getElementById('start-capture-btn')
     .addEventListener('click', startCapture);

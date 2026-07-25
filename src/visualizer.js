@@ -162,6 +162,11 @@ export class Visualizer {
     this.hue = (this.hue + (12 + bands.mid * 22) * dt) % 360;
     window.VIZ_HUE = this.hue;
 
+    if (mode.startsWith('p5-')) {
+      this._prevMode = mode;
+      return;
+    }
+
     this._beatPulse = Math.max(0, this._beatPulse - dt * 4.5);
 
     const isBeat = this._detectBeat(bands);
