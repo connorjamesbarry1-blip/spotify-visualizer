@@ -3,3 +3,7 @@
 *.env
 .env.local
 .env.*.local
+
+# Dev-only preview harness (not shipped to prod)
+preview.html
+src/mockaudio.js

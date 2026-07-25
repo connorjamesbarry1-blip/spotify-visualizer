@@ -160,7 +160,8 @@ export class Visualizer {
     };
 
     this.hue = (this.hue + (12 + bands.mid * 22) * dt) % 360;
-    window.VIZ_HUE = this.hue;
+    // Expose the *color-mode-adjusted* hue so p5 sketches honour Warm/Cool too.
+    window.VIZ_HUE = this._dHue();
 
     if (mode.startsWith('p5-')) {
       this._prevMode = mode;
@@ -291,7 +292,7 @@ export class Visualizer {
     const W = canvas.width, H = canvas.height;
     const s = window.VIZ_SETTINGS;
 
-    this._applyFade(0.055);
+    this._applyFade(0.025);
 
     const len  = timeData.length;
     const midY = H / 2;
@@ -537,7 +538,7 @@ export class Visualizer {
     const r = s.reactivity;
     const hue = this._dHue();
 
-    this._applyFade(0.04);
+    this._applyFade(0.02);
 
     if (bands.bass > 0.45) {
       const n = Math.ceil((bands.bass - 0.45) * 6 * r);
@@ -744,7 +745,7 @@ export class Visualizer {
     const hue = this._dHue();
     const r = s.reactivity;
 
-    this._applyFade(0.08);
+    this._applyFade(0.03);
 
     const maxR  = Math.min(W, H) * 0.45;
     const innerR = maxR * 0.1;
@@ -807,7 +808,7 @@ export class Visualizer {
     const hue = this._dHue();
     const r   = s.reactivity;
 
-    this._applyFade(0.06);
+    this._applyFade(0.03);
 
     // Spiral rotation speeds up with mids
     this._spiralAngle += dt * (0.15 + bands.mid * 0.5 * r);
@@ -868,7 +869,7 @@ export class Visualizer {
     const hue = this._dHue();
     const r   = s.reactivity;
 
-    this._applyFade(0.07);
+    this._applyFade(0.035);
 
     // Rotation speeds up with energy
     this._polyRotation += dt * (0.18 + bands.mid * 0.6 * r);
@@ -968,8 +969,8 @@ export class Visualizer {
     const hue = this._dHue();
     const r   = s.reactivity;
 
-    // Tunnel needs heavier fade for depth effect
-    this._applyFade(0.22);
+    // Tunnel needs a heavier fade floor for the depth-streak effect
+    this._applyFade(0.12);
 
     // Fall speed: bass drives it, beat gives a lurch
     const fallSpeed = 0.8 + bands.bass * 2.5 * r + this._beatPulse * 2.0 * r;
